@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WebChat</title>
+
+  <style>
+  html, body {
+    padding: 0;
+    margin: 0;
+  }
+  .messages {
+    padding-bottom: 30px;
+  }
+  .compose {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+  }
+  .compose-field {
+    width: 90%;
+  }
+  </style>
+</head>
+<body>
+  <div id="messages" class="messages"></div>
+  <form class="compose" id="form">
+    <input type="text" name="message" placeholder="Digite a mensagem" class="compose-field">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <!-- <script type="text/javascript" src="/socket.io/socket.io.js"></script> -->
+  <script type="text/javascript">
+  var socket = io();
+  var messagesEl = document.getElementById('messages');
+  var formEl = document.getElementById('form');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    var messageInput = formEl.elements['message'];
+    socket.emit('message', messageInput.value);
+    messageInput.value = '';
+  });
+  socket.on('message', function(data) {
+    var node = document.createElement('div');
+    node.textContent = data;
+    messagesEl.appendChild(node);
+  });
+  </script>
+</body>
+</html>
